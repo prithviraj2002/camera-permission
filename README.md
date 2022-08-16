@@ -5,7 +5,7 @@ Camera permission is used here, hence the name.
 Google accompanist library is used here.
 
 The app works like this:
-https://user-images.githubusercontent.com/82358330/184800103-8255e539-bbce-4a95-8f8d-3af6a7167a62.mp4
+https://user-images.githubusercontent.com/82358330/184865383-2ef35f4a-2868-4c75-b7db-67b3fa5332db.mp4
 
 The screen that appears first, has a place holder at its focus, where currently lies an icon, for the clicked image to be displayed later.
 Down below is a button to open the camera, followed by the text which shows the state of the camera permission.
