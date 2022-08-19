@@ -5,7 +5,10 @@ Camera permission is used here, hence the name.
 Google accompanist library is used here.
 
 The app works like this:
-https://user-images.githubusercontent.com/82358330/184865383-2ef35f4a-2868-4c75-b7db-67b3fa5332db.mp4
+https://user-images.githubusercontent.com/82358330/185547615-7e75a848-03a7-4eb8-ba77-5e5c27a0327d.mp4
+
+Permission dialog is prompted as:
+![WhatsApp Image 2022-08-19 at 10 05 47 AM](https://user-images.githubusercontent.com/82358330/185547728-4b308cdd-7eb3-4e72-9b34-c2a48f3140df.jpeg)
 
 The screen that appears first, has a place holder at its focus, where currently lies an icon, for the clicked image to be displayed later.
 Down below is a button to open the camera, followed by the text which shows the state of the camera permission.
