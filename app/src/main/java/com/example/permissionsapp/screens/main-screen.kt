@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -45,56 +47,71 @@ fun HomeScreen(){
     val loadImage = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()){
         result.value = it
     }
+
     // A surface container using the 'background' color from the theme
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
     ) {
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(
+            modifier = Modifier.height(10.dp)
+        )
         Card(
             modifier = Modifier
                 .height(500.dp)
                 .width(500.dp)
                 .padding(20.dp),
             elevation = 20.dp,
-            shape = RoundedCornerShape(corner = CornerSize(15.dp))) {
-            Spacer(modifier = Modifier.height(30.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            shape = RoundedCornerShape(
+                corner = CornerSize(15.dp)
+            )) {
+            Spacer(
+                modifier = Modifier.height(30.dp)
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = "Create your profile here!",
-                    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp),
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp),
                     modifier = Modifier.padding(10.dp)
                 )
-                Divider(modifier = Modifier
+                Divider(
+                    modifier = Modifier
                     .fillMaxWidth()
-                    .padding(10.dp), color = Color.Gray)
+                    .padding(10.dp),
+                    color = Color.Gray)
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(
+                        modifier = Modifier.height(10.dp)
+                    )
                     Box(
                         modifier = Modifier
-                            .height(120.dp)
-                            .width(120.dp)
-//                            .border(
-//                                width = 1.dp,
-//                                color = Color.Gray,
-//                                shape = RoundedCornerShape(corner = CornerSize(10.dp))
-//                            ),
-                                ,
-                        contentAlignment = Alignment.Center
+                            .height(100.dp)
+                            .width(100.dp)
+                            .clip(shape = CircleShape)
+                            .border(
+                                width = 1.dp,
+                                color = Color.Gray,
+                                shape = CircleShape),
+                        contentAlignment = Alignment.Center,
                     ){
                         Image(
                             result.value.asImageBitmap(),
                             contentDescription = "Captured image",
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.FillWidth,
                             modifier = Modifier
-                                .height(120.dp)
-                                .width(120.dp)
+                                .height(150.dp)
+                                .width(150.dp)
                         )
                     }
-                    IconButton(onClick = {
+                    IconButton(
+                        onClick = {
                         if(cameraPermission.hasPermission){
                             loadImage.launch()
                         }
@@ -103,9 +120,13 @@ fun HomeScreen(){
                         }
                     }) {
                         Row{
-                            Icon(imageVector = Icons.Default.Camera, contentDescription = "Camera",
+                            Icon(
+                                imageVector = Icons.Default.Camera,
+                                contentDescription = "Camera",
                             modifier = Modifier.padding(horizontal = 10.dp))
-                            Text(text = "Click a picture", modifier = Modifier.clickable {
+                            Text(
+                                text = "Click a picture",
+                                modifier = Modifier.clickable {
                                         if(cameraPermission.hasPermission){
                                             loadImage.launch()
                                         }
@@ -145,3 +166,4 @@ fun HomeScreen(){
         }
     }
 }
+
