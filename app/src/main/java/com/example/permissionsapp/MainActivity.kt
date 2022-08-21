@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.example.permissionsapp.screens.HomeScreen
+import com.example.permissionsapp.screens.MainScreen
 import com.example.permissionsapp.ui.theme.PermissionsAppTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
@@ -13,7 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             PermissionsAppTheme {
-                HomeScreen()
+                MainScreen()
             }
         }
     }

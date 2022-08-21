@@ -1,11 +1,11 @@
 package com.example.permissionsapp.screens
 
 import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -14,55 +14,51 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
-import androidx.core.content.ContextCompat
-import com.example.permissionsapp.MainActivity
-import kotlin.coroutines.coroutineContext
-import androidx.compose.material.Surface as Surface
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MainScreen(){
+fun HomeScreen() {
+    val cameraPermission = rememberPermissionState(permission = Manifest.permission.CAMERA)
     val myImage: Bitmap = BitmapFactory.decodeResource(
         Resources.getSystem(),
         android.R.drawable.ic_menu_gallery
     )
-    val result = rememberSaveable {
-        mutableStateOf<Bitmap>(myImage);
+    val result = remember {
+        mutableStateOf<Bitmap>(myImage)
     }
     val loadImage = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicturePreview()){
-        result.value = it
-    }
-
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()){
-        isGranted: Boolean ->
-        if(isGranted){
-            loadImage.launch()
-        }
-        else{
-            ActivityResultContracts.RequestPermission()
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) {
+        if (it.toString().isEmpty()) {
+            result.value = myImage
+        } else {
+            result.value = it
         }
     }
-
-    val context = LocalContext.current
-
+    // A surface container using the 'background' color from the theme
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -77,14 +73,16 @@ fun MainScreen(){
                 text = "Create your profile here!",
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp),
+                    fontSize = 20.sp
+                ),
                 modifier = Modifier.padding(10.dp)
             )
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(10.dp),
-                color = Color.Gray)
+                color = Color.Gray
+            )
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -103,7 +101,7 @@ fun MainScreen(){
                             shape = CircleShape
                         ),
                     contentAlignment = Alignment.Center,
-                ){
+                ) {
                     Image(
                         result.value.asImageBitmap(),
                         contentDescription = "Captured image",
@@ -115,28 +113,25 @@ fun MainScreen(){
                 }
                 IconButton(
                     onClick = {
-                        when(PackageManager.PERMISSION_GRANTED){
-                            ContextCompat.checkSelfPermission(
-                                context,
-                                Manifest.permission.CAMERA
-                            ) -> loadImage.launch()
-                            else -> launcher.launch(Manifest.permission.CAMERA)
+                        if (cameraPermission.hasPermission) {
+                            loadImage.launch()
+                        } else if (!cameraPermission.hasPermission) {
+                            cameraPermission.launchPermissionRequest()
                         }
                     }) {
-                    Row{
+                    Row {
                         Icon(
                             imageVector = Icons.Default.Camera,
                             contentDescription = "Camera",
-                            modifier = Modifier.padding(horizontal = 10.dp))
+                            modifier = Modifier.padding(horizontal = 10.dp)
+                        )
                         Text(
                             text = "Click a picture",
                             modifier = Modifier.clickable {
-                                when(PackageManager.PERMISSION_GRANTED){
-                                    ContextCompat.checkSelfPermission(
-                                        context,
-                                        Manifest.permission.CAMERA
-                                    ) -> loadImage.launch()
-                                    else -> launcher.launch(Manifest.permission.CAMERA)
+                                if (cameraPermission.hasPermission) {
+                                    loadImage.launch()
+                                } else if (!cameraPermission.hasPermission) {
+                                    cameraPermission.launchPermissionRequest()
                                 }
                             }
                         )
@@ -164,11 +159,13 @@ fun MainScreen(){
                 textStyle = TextStyle(color = Color.Gray)
             )
             Spacer(modifier = Modifier.height(5.dp))
-            Button(onClick = { /*TODO*/ }) {
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+            ) {
                 Text(text = "Submit!")
             }
         }
     }
 }
-
 
