@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.permissionsapp">
 
-    <uses-permission android:name="android.permission.CAMERA"
-        android:requiredFeature="false"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera.any" />
 
     <application
